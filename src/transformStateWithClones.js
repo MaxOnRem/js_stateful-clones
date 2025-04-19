@@ -13,9 +13,13 @@
 
 function transformStateWithClones(state, actions) {
   const history = [];
-  const clone = { ...state };
+
+  let currentState = { ...state };
 
   for (const action of actions) {
+    // 🔄 клон на основі попереднього стану
+    const clone = { ...currentState };
+
     switch (action.type) {
       case 'addProperties':
         addProperties(clone, action.extraData);
@@ -29,7 +33,12 @@ function transformStateWithClones(state, actions) {
         clear(clone);
         break;
     }
-    history.push({ ...clone });
+
+    // 🔁 оновлюємо currentState на основі модифікованого клона
+    currentState = clone;
+
+    // 📌 пушимо саме клон
+    history.push(clone);
   }
 
   return history;
